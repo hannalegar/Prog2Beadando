@@ -77,9 +77,10 @@ namespace Prog2_Beadando
             switch (tipus)
             {
                 case Tipus.motor:
-                    auto.Motor = this;
+                    auto.Motor = (this as Motor);
                     break;
                 case Tipus.legszuro:
+                    auto.Legszuro = (this as )
                     break;
                 case Tipus.fekrendszer:
                     break;
