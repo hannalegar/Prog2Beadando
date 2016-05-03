@@ -275,14 +275,20 @@ namespace Prog2_Beadando
         List<Alkatresz> alkatreszek; //a fileban megadott alkatrészeket fogja eltárolni
         string optimalizacioKikotes; //Aszerinti ki kötés, hogy mi alapján keressen a Backtrack alkatrészeket
         Alkatresz alkatreszKikotes; //ez lesz az az alkatrész amire a kikötés szól
+
+        public Alkatresz AlkatreszKikotes
+        {
+            get { return alkatreszKikotes; }
+            set { alkatreszKikotes = value; }
+        }
         //List<Alkatresz> autova; //ezekből az alkatrészekből fog összeállni egy auto
         Auto auto;
-        //bool beLeheteEpiteni;
-        //bool motorKompatibilis;
-        //bool fekKompatibilis;
-        //bool legszuroKompatibilis;
-        //bool valtoKompatibilis;
-        //bool elektronikaKompatibilis;
+
+        public Auto Auto
+        {
+            get { return auto; }
+            set { auto = value; }
+        }
 
 
         public Feldolgoz(string filename)
@@ -465,10 +471,166 @@ namespace Prog2_Beadando
             }
         }
 
-        //bool Backtrack(Alkatresz alkatresz)
-        //{
-
-        //}
+        public void Backtrack(Alkatresz alkatresz)
+        {
+            if (auto.Elektronika != null && auto.Fekrendszer != null && auto.Legszuro != null && auto.Motor != null && auto.Valto != null)
+            {
+                Console.WriteLine("Kész az auto");
+            }
+            else
+            {
+                int i;
+                switch (alkatresz.Tipus)
+                {
+                    case Tipus.motor:
+                        if (alkatreszKikotes.Tipus != Tipus.valto)
+                        {
+                            i = 0;
+                            while (alkatreszKikotes.KompatibilisValto != null && i < alkatreszKikotes.KompatibilisValto.Count && auto.Valto == null)
+                            {
+                                try
+                                {
+                                    alkatreszKikotes.KompatibilisValto[i].Beepit(auto);
+                                }
+                                catch (BeepitException)
+                                {
+                                  i++;
+                                }
+                            }
+                            if (alkatreszKikotes.KompatibilisValto != null && i > alkatreszKikotes.KompatibilisValto.Count)
+                            {
+                                throw new NemTalaltAlkatresztException(alkatresz);
+                            }
+                            else if (alkatreszKikotes.KompatibilisValto == null)
+                            {
+                                throw new NemTalaltAlkatresztException(alkatresz);
+                            }
+                        }
+                        if (auto.Valto != null)
+                        {
+                            Backtrack(auto.Valto);   
+                        }
+                        break;
+                    case Tipus.legszuro:
+                        if (alkatreszKikotes.Tipus != Tipus.fekrendszer)
+                        {
+                            i = 0;
+                            while (alkatreszKikotes.KompatibilisFekrendszer != null && i < alkatreszKikotes.KompatibilisFekrendszer.Count && auto.Fekrendszer == null)
+                            {
+                                try
+                                {
+                                    alkatreszKikotes.KompatibilisFekrendszer[i].Beepit(auto);
+                                }
+                                catch (BeepitException)
+                                {
+                                    i++;
+                                }
+                            }
+                            if (alkatreszKikotes.KompatibilisFekrendszer != null && i > alkatreszKikotes.KompatibilisFekrendszer.Count)
+                            {
+                                throw new NemTalaltAlkatresztException(alkatresz);
+                            }
+                            else if (alkatreszKikotes.KompatibilisFekrendszer == null)
+                            {
+                                throw new NemTalaltAlkatresztException(alkatresz);
+                            }
+                        }
+                        if(auto.Legszuro != null)
+                        {
+                            Backtrack(auto.Fekrendszer);
+                        }
+                        break;
+                    case Tipus.fekrendszer:
+                        if (alkatreszKikotes.Tipus != Tipus.elektronika)
+                        {
+                            i = 0;
+                            while (alkatreszKikotes.KompatibilisElektronika != null && i < alkatreszKikotes.KompatibilisElektronika.Count && auto.Elektronika == null)
+                            {
+                                try
+                                {
+                                    alkatreszKikotes.KompatibilisElektronika[i].Beepit(auto);
+                                }
+                                catch (BeepitException)
+                                {
+                                    i++;
+                                }
+                            }
+                            if (alkatreszKikotes.KompatibilisElektronika != null && i > alkatreszKikotes.KompatibilisElektronika.Count)
+                            {
+                                throw new NemTalaltAlkatresztException(alkatresz);
+                            }
+                            else if (alkatreszKikotes.KompatibilisElektronika == null)
+                            {
+                                throw new NemTalaltAlkatresztException(alkatresz);
+                            }
+                        }
+                        if (auto.Elektronika != null)
+                        {
+                            Backtrack(auto.Elektronika);
+                        }
+                        break;
+                    case Tipus.elektronika:
+                        if (alkatreszKikotes.Tipus != Tipus.motor)
+                        {
+                            i = 0;
+                            while (alkatreszKikotes.KompatibilisMotorok != null && i < alkatreszKikotes.KompatibilisMotorok.Count && auto.Motor == null)
+                            {
+                                try
+                                {
+                                    alkatreszKikotes.KompatibilisMotorok[i].Beepit(auto);
+                                }
+                                catch (BeepitException)
+                                {
+                                    i++;
+                                }
+                            }
+                            if (alkatreszKikotes.KompatibilisMotorok != null && i > alkatreszKikotes.KompatibilisMotorok.Count)
+                            {
+                                throw new NemTalaltAlkatresztException(alkatresz);
+                            }
+                            else if (alkatreszKikotes.KompatibilisMotorok == null)
+                            {
+                                throw new NemTalaltAlkatresztException(alkatresz);
+                            }
+                        }
+                        if (auto.Motor != null)
+                        {
+                            Backtrack(auto.Motor);
+                        }
+                        break;
+                    case Tipus.valto:
+                        if (alkatreszKikotes.Tipus != Tipus.legszuro)
+                        {
+                            i = 0;
+                            while (alkatreszKikotes.KompatibilisLegszuro != null && i < alkatreszKikotes.KompatibilisLegszuro.Count && auto.Legszuro == null)
+                            {
+                                try
+                                {
+                                    alkatreszKikotes.KompatibilisLegszuro[i].Beepit(auto);
+                                }
+                                catch (BeepitException)
+                                {
+                                    i++;
+                                }
+                            }
+                            if (alkatreszKikotes.KompatibilisLegszuro != null && i > alkatreszKikotes.KompatibilisLegszuro.Count)
+                            {
+                                throw new NemTalaltAlkatresztException(alkatresz);
+                            }
+                            else if (alkatreszKikotes.KompatibilisLegszuro == null)
+                            {
+                                throw new NemTalaltAlkatresztException(alkatresz);
+                            }
+                        }
+                        if(auto.Legszuro != null)
+                        {
+                            Backtrack(auto.Legszuro);
+                        }
+                        break;
+                }
+            }
+            
+        }
 
         /// <summary>
         /// Kikeresei az adott alkatrész istából a legkönyebb alkatrészt
