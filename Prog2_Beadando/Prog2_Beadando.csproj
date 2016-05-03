@@ -42,7 +42,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Alkatresz.cs" />
+    <Compile Include="AlkatreszException.cs" />
     <Compile Include="Auto.cs" />
+    <Compile Include="BeepitException.cs" />
     <Compile Include="BenzinMotor.cs" />
     <Compile Include="Beolvasas.cs" />
     <Compile Include="Elektronika.cs" />

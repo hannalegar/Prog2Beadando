@@ -43,6 +43,14 @@ namespace Prog2_Beadando
             set { mukodokepes = value; }
         }
 
+        List<Alkatresz> osszesKompatibilisAlkatresz;
+        public List<Alkatresz> OsszesKompatibilisAlkatresz
+        {
+            get { return osszesKompatibilisAlkatresz; }
+            set { osszesKompatibilisAlkatresz = value; }
+        }
+
+
         List<Motor> kompatibilisMotorok; //az adott alkatrésszel kompatibilis motorok listája
         public List<Motor> KompatibilisMotorok
         {
@@ -74,22 +82,30 @@ namespace Prog2_Beadando
         }
         public void Beepit(Auto auto)
         {
-            switch (tipus)
+            if (this.KompatibilisTobbiAlkatresszel(auto))
             {
-                case Tipus.motor:
-                    auto.Motor = (this as Motor);
-                    break;
-                case Tipus.legszuro:
-                    auto.Legszuro = (this as )
-                    break;
-                case Tipus.fekrendszer:
-                    break;
-                case Tipus.elektronika:
-                    break;
-                case Tipus.valto:
-                    break;
-                default:
-                    break;
+                switch (tipus)
+                {
+                    case Tipus.motor:
+                        auto.Motor = (this as Motor);
+                        break;
+                    case Tipus.legszuro:
+                        auto.Legszuro = (this as Legszuro);
+                        break;
+                    case Tipus.fekrendszer:
+                        auto.Fekrendszer = (this as Fekrendszer);
+                        break;
+                    case Tipus.elektronika:
+                        auto.Elektronika = (this as Elektronika);
+                        break;
+                    case Tipus.valto:
+                        auto.Valto = (this as Valto);
+                        break;
+                }
+            }
+            else
+            {
+                throw new BeepitException(this);
             }
         }
 
@@ -104,6 +120,16 @@ namespace Prog2_Beadando
         /// <param name="alkatresz"></param>
         public void KompatibilisHozzaAd(IAlkatresz alkatresz)
         {
+            if (osszesKompatibilisAlkatresz == null)
+            {
+                osszesKompatibilisAlkatresz = new List<Alkatresz>();
+                osszesKompatibilisAlkatresz.Add(alkatresz as Alkatresz);
+            }
+            else
+            {
+                osszesKompatibilisAlkatresz.Add(alkatresz as Alkatresz);
+            }
+
             switch (alkatresz.Tipus)
             {
                 case Tipus.motor:
@@ -172,6 +198,106 @@ namespace Prog2_Beadando
             this.suly = suly;
             this.ar = ar;
             this.mukodokepes = true;
+        }
+
+        bool KompatibilisTobbiAlkatresszel(Auto auto)
+        {
+            int i = 0;
+            if (auto.Motor == null)
+            {
+                i++;
+            }
+            if (auto.Fekrendszer == null)
+            {
+                i++;                
+            }
+            if (auto.Elektronika == null)
+            {
+                i++;
+            }
+            if (auto.Valto == null)
+            {
+                i++;
+            }
+            if (auto.Legszuro == null)
+            {
+                i++;
+            }
+            
+            if (auto.Motor != null && auto.Motor.KompatiblisValamivel(this))
+            {
+                i++;
+            }
+            if (auto.Elektronika != null && auto.Elektronika.KompatiblisValamivel(this))
+            {
+                i++;
+            }
+            if (auto.Fekrendszer != null && auto.Fekrendszer.KompatiblisValamivel(this))
+            {
+                i++;
+            }
+            if (auto.Legszuro != null && auto.Legszuro.KompatiblisValamivel(this))
+            {
+                i++;
+            }
+            if (auto.Valto != null && auto.Valto.KompatiblisValamivel(this))
+            {
+                i++;
+            }
+            return i == 5;
+        }
+
+        bool KompatiblisValamivel(Alkatresz alkatresz)
+        {
+            /*
+            int i = 0;
+            if (alkatresz.kompatibilisElektronika == null)
+            {
+                i++;
+            }
+            if (alkatresz.kompatibilisFekrendszer == null)
+            {
+                i++;
+            }
+            if (alkatresz.KompatibilisLegszuro == null)
+            {
+                i++;
+            }
+            if (alkatresz.KompatibilisMotorok == null)
+            {
+                i++;
+            }
+            if (alkatresz.KompatibilisValto == null)
+            {
+                i++;
+            }
+
+            if (alkatresz.kompatibilisElektronika != null && alkatresz.KompatibilisElektronika.Contains(this))
+            {
+                i++;
+            }
+            if (alkatresz.kompatibilisFekrendszer != null && alkatresz.KompatibilisFekrendszer.Contains(this))
+            {
+                i++;
+            }
+            if (alkatresz.kompatibilisLegszuro != null && alkatresz.kompatibilisLegszuro.Contains(this))
+            {
+                i++;
+            }
+            if (alkatresz.kompatibilisMotorok != null && alkatresz.kompatibilisMotorok.Contains(this))
+            {
+                i++;
+            }
+            if (alkatresz.KompatibilisValto != null && alkatresz.KompatibilisValto.Contains(this))
+            {
+                i++;
+            }
+
+            return i == 5;
+            */
+
+
+            return alkatresz.osszesKompatibilisAlkatresz.Contains(this);
         }
     }
 }

@@ -275,10 +275,19 @@ namespace Prog2_Beadando
         List<Alkatresz> alkatreszek; //a fileban megadott alkatrészeket fogja eltárolni
         string optimalizacioKikotes; //Aszerinti ki kötés, hogy mi alapján keressen a Backtrack alkatrészeket
         Alkatresz alkatreszKikotes; //ez lesz az az alkatrész amire a kikötés szól
-        List<Alkatresz> autova; //ezekből az alkatrészekből fog összeállni egy auto
+        //List<Alkatresz> autova; //ezekből az alkatrészekből fog összeállni egy auto
+        Auto auto;
+        //bool beLeheteEpiteni;
+        //bool motorKompatibilis;
+        //bool fekKompatibilis;
+        //bool legszuroKompatibilis;
+        //bool valtoKompatibilis;
+        //bool elektronikaKompatibilis;
+
 
         public Feldolgoz(string filename)
         {
+            this.auto = new Auto();
             this.filename = filename;
             this.txtSorai = new List<string>();
             this.alkatreszek = new List<Alkatresz>(); 
@@ -336,6 +345,24 @@ namespace Prog2_Beadando
 
             Console.WriteLine("\nKikötés");
             Console.WriteLine(alkatreszKikotes.Nev);
+
+            //alkatreszek[5].Beepit(auto);
+            //alkatreszek[1].Beepit(auto);
+            //alkatreszek[2].Beepit(auto);
+            //alkatreszek[3].Beepit(auto);
+            //alkatreszek[4].Beepit(auto);
+            //Console.WriteLine("kocsi váltója: " + auto.Valto.Nev);
+            //Console.WriteLine("Kocsi féke: " + auto.Fekrendszer.Nev);
+            //Console.WriteLine("kocsi légsz: " + auto.Legszuro.Nev);
+            //Console.WriteLine("kocsi elektr: " + auto.Elektronika.Nev);
+
+            Console.WriteLine("\nAuto motorja: " + auto.Motor.Nev);
+
+            Console.WriteLine("\nÖsszes kompatibilis elem listája");
+            foreach (Alkatresz item in alkatreszek[0].OsszesKompatibilisAlkatresz)
+            {
+                Console.WriteLine("neve: " + item.Nev + "típusa: " + item.Tipus);
+            }
         }
 
         /// <summary>
@@ -427,6 +454,7 @@ namespace Prog2_Beadando
                 }
             }
             alkatreszKikotes = MelyikElem(nevKikotes);
+            alkatreszKikotes.Beepit(auto);
 
             foreach (string item in txtSorai)
             {
@@ -437,21 +465,10 @@ namespace Prog2_Beadando
             }
         }
 
-        void Backtrack()
-        {
-        //    if (autova == null)
-        //    {
-        //        autova = new List<Alkatresz>();
-        //        autova.Add(alkatresz);
-        //    }
-        //    if (optimalizacioKikotes == "súly")
-        //    {
-        //        Legkonnyebb(alkatresz.KompatibilisElektronika);
-        //    }
+        //bool Backtrack(Alkatresz alkatresz)
+        //{
 
-
-
-        }
+        //}
 
         /// <summary>
         /// Kikeresei az adott alkatrész istából a legkönyebb alkatrészt
@@ -494,9 +511,9 @@ namespace Prog2_Beadando
         /// <summary>
         /// Megnézi, hogy két alkatrész kompatibilis-e egymással
         /// </summary>
-        bool Kompatibilis(Alkatresz alkatreszMi, Alkatresz alkatereszMivel)
-        {
-            return alkatereszMivel.KompatibilisElektronika.Contains(alkatreszMi) || alkatereszMivel.KompatibilisFekrendszer.Contains(alkatreszMi) || alkatereszMivel.KompatibilisLegszuro.Contains(alkatreszMi) || alkatereszMivel.KompatibilisMotorok.Contains(alkatreszMi) || alkatereszMivel.KompatibilisValto.Contains(alkatreszMi);
-        }
+        //bool Kompatibilis(Alkatresz alkatreszMi, Alkatresz alkatereszMivel)
+        //{
+        //    return alkatereszMivel.KompatibilisElektronika.Contains(alkatreszMi) || alkatereszMivel.KompatibilisFekrendszer.Contains(alkatreszMi) || alkatereszMivel.KompatibilisLegszuro.Contains(alkatreszMi) || alkatereszMivel.KompatibilisMotorok.Contains(alkatreszMi) || alkatereszMivel.KompatibilisValto.Contains(alkatreszMi);
+        //}
     }
 }
