@@ -9,272 +9,26 @@ namespace Prog2_Beadando
 {
     class Feldolgoz
     {
-        /*
-        string filename;
-        List<string> list; //a beolvasott fájl sorait tartalmazza
-        List<IAlkatresz> alkatReszek; //a létrehozott alkatrészeket tárolja
-        string nevkikotes;
-        Tipus tipusKikotes;
-        IAlkatresz alkatreszKikotes;
-        List<IAlkatresz> autova = new List<IAlkatresz>();
-        List<IAlkatresz> F = new List<IAlkatresz>(); //kikötésre vonatkozóan ezekben lesznek az egymással kompatibilis alkatrészek
-
-        public List<IAlkatresz> Autova
-        {
-            get { return autova; }
-        }
-        
-        string szempont; //milyen szempont szerint legyen a konfiguráció
-
-        public List<IAlkatresz> AlkatReszek
-        {
-            get { return alkatReszek; }
-        }
-        public List<string> List
-        {
-            get { return list; }
-        }
-
-        public Feldolgoz(string filename)
-        {
-            this.filename = filename;
-            this.list = new List<string>();
-            this.alkatReszek = new List<IAlkatresz>();
-            this.Beolvas();
-            this.GrafotLetrehoz();
-            this.Kikotes();
-            this.SzelessegiBejaras();
-        }
-
-        /// <summary>
-        /// beolvassa a fájl sorait
-        /// </summary>
-        void Beolvas()
-        {
-            StreamReader sr = new StreamReader(filename, Encoding.Default);
-            string line;
-            while (!sr.EndOfStream)
-            {
-                line = sr.ReadLine();
-                list.Add(line);
-            }
-            sr.Close();
-        }
-
-        /// <summary>
-        /// A list alapján létrehozza az alkatrészeket, majd beállítja, hogy mi mivel kompatibilis,
-        /// a gárf tulajdonképpen az alapján jön létre.
-        /// </summary>
-        void GrafotLetrehoz()
-        {
-            for (int i = 0; i < list.Count; i++)
-            {
-                if (list[i].StartsWith("IAlkatrész"))
-                {
-                    string[] tipus = list[i].Split(':');
-                    //Az IAlkatrész után van, hogy milyen típus lesz, és ez alapján hívja meg a megfelelő osztály konstruktorát.
-                    //Ha a dokumentációnak megfelelően lettek felírva az adatok, akor létrhozza a program a kívánt alkatrészt
-                    switch (tipus[1])
-                    {
-                        case "BenzinMotor":
-                            alkatReszek.Add(new BenzinMotor(list[i + 1].Split(':')[1], int.Parse(list[i + 2].Split(':')[1]), int.Parse(list[i + 3].Split(':')[1])));
-                            break;
-                        case "Valto":
-                            alkatReszek.Add(new Valto(list[i + 1].Split(':')[1], int.Parse(list[i + 2].Split(':')[1]), int.Parse(list[i + 3].Split(':')[1])));
-                            break;
-                        case "Elektronika":
-                            alkatReszek.Add(new Elektronika(list[i + 1].Split(':')[1], int.Parse(list[i + 2].Split(':')[1]), int.Parse(list[i + 3].Split(':')[1])));
-                            break;
-                        case "Fekrendszer":
-                            alkatReszek.Add(new Fekrendszer(list[i + 1].Split(':')[1], int.Parse(list[i + 2].Split(':')[1]), int.Parse(list[i + 3].Split(':')[1])));
-                            break;
-                        case "Legszuro":
-                            alkatReszek.Add(new Legszuro(list[i + 1].Split(':')[1], int.Parse(list[i + 2].Split(':')[1]), int.Parse(list[i + 3].Split(':')[1])));
-                            break;
-                        default:
-                            //throw exception
-                            break;
-                    }
-
-                }
-            }
-
-            //A már meglévő alkatrészeknek beállítja, hogy mi mivel kompatibilis
-            for (int i = 0; i < list.Count; i++)
-            {
-                if (list[i].StartsWith("IAlkatrész"))
-                {
-                    string[] kompatibilis = list[i + 4].Split(':')[1].Split(',');//idáig kikeresi az első alkatrészt, és kikeresi azokat a neveket amikker az adott alkatrész kompatiblis
-                    foreach (IAlkatresz item in alkatReszek) 
-                    {
-                        if (list[i + 1].Contains(item.Nev)) //Ez a sor megkeresi a létrehozott alkatrészek között azt az alkatrészt aminek be akarjuk állítani, hogy mikkel kompatiblis
-                        {
-                            foreach (String kompItem in kompatibilis) //végig szalad azon a tömbön amit a beolvasott listából vágtunk ki, ami neveket tartalmaz
-                            {
-                                foreach (IAlkatresz alkItem in alkatReszek) 
-                                {
-                                    if (kompItem.Contains(alkItem.Nev)) //összehasonlítja a nevet az alkatrészek között található nevekkel
-                                    {
-                                        item.KompatibilisHozzaAd(alkItem); //Ha a két név egyezik, akkor létrehozza köztük a kompatibilitás, azaz a gráf két csúcsa közé húz egy élt
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                }
-            }
-        }
-
-        void Kikotes()
-        {
-            foreach (String item in list)
-            {
-                if (item.Contains("név kikötés"))
-                {
-                    nevkikotes = item.Split(':')[1];
-                }
-                else if (item.Contains("típus kikötés"))
-                {
-                    string tipus = item.Split(':')[1];
-                    switch (tipus)
-                    {
-                        case "motor":
-                            tipusKikotes = Tipus.motor;
-                            break;
-                        case "Benzin motor":
-                            tipusKikotes = Tipus.motor;
-                            break;
-                        case "Diesel motor":
-                            tipusKikotes = Tipus.motor;
-                            break;
-                        case "fekrendszer":
-                            tipusKikotes = Tipus.fekrendszer;
-                            break;
-                        case "valto":
-                            tipusKikotes = Tipus.valto;
-                            break;
-                        case "legszuro":
-                            tipusKikotes = Tipus.legszuro;
-                            break;
-                        case "elektronika":
-                            tipusKikotes = Tipus.elektronika;
-                            break;
-                        default:
-                            //throw exception
-                            break;
-                    }
-                }
-                else if (item.Contains("szempont"))
-                {
-                    szempont = item.Split(':')[1];
-                }
-            }
-            foreach (IAlkatresz item in alkatReszek)
-            {
-                if (item.Tipus == tipusKikotes && item.Nev.Contains(nevkikotes))
-                {
-                    alkatreszKikotes = item;
-                }
-            }
-        }
-        
-        /*
-        void Backtrack(IAlkatresz alkatresz, string szempont)
-        {
-            IAlkatresz kovetkezoAlkatresz = null;
-            if (autova.Count == 0)
-            {
-                autova.Add(alkatresz);
-            }
-            if (autova.Count != 5)
-            {
-                kovetkezoAlkatresz = SzempontszerintKivalaszt(alkatresz.Kompatibilis, szempont);
-                autova.Add(kovetkezoAlkatresz);
-                Backtrack(kovetkezoAlkatresz, szempont);    
-            }
-        }
-        
-        IAlkatresz SzempontszerintKivalaszt(List<IAlkatresz> alkatreszLista, string szempont)
-		{
-            IAlkatresz ret = 
-           
-            if (szempont == "ár")
-	        {
-		        foreach (IAlkatresz item in alkatreszLista)
-	            {
-		            if (item.Ar < ret.Ar && !(autova.Contains(item)))
-	                {
-		                ret = item;
-	                }
-	            }
-	        }
-            else if(szempont == "súly")
-	        {
-                foreach (IAlkatresz item in alkatreszLista)
-	            {
-		            if (item.Suly < ret.Suly && !(autova.Contains(item)))
-	                {
-		                ret = item;
-	                }
-	            }
-            }
-            else if (szempont == "opt")
-            {
-                foreach (IAlkatresz item in alkatreszLista)
-                {
-                    if (!autova.Contains(item))
-                    {
-                        ret = item;
-                    }
-                }
-            }
-            return ret;
-        }
-        
-        
-
-        void SzelessegiBejaras()
-        {
-            Queue<IAlkatresz> S = new Queue<IAlkatresz>();
-            S.Enqueue(alkatreszKikotes);
-            
-            F.Add(alkatreszKikotes);
-
-            while (S.Count > 0)
-            {
-                IAlkatresz k = S.Dequeue();
-                int index = 0;
-                while (index < k.Kompatibilis.Count)
-                {
-                    if (!F.Contains(k.Kompatibilis[index]))
-                    {
-                        S.Enqueue(k.Kompatibilis[index]);
-                        F.Add(k.Kompatibilis[index]);
-                    }
-                    index++;
-                }
-            }
-
-            Console.WriteLine("Graf csúcsai");
-            foreach (IAlkatresz item in F)
-            {
-                Console.WriteLine(item.Nev);
-            }
-        }
-
-
-        void AutoOsszeallitas()
-        {
-               
-        }
-        */
 
         string filename; //a file neve amit szeretnénk, hogy a program feldolgozzon
         List<string> txtSorai; //a beolvasott txt sorait tárolja el
         List<Alkatresz> alkatreszek; //a fileban megadott alkatrészeket fogja eltárolni
         string optimalizacioKikotes; //Aszerinti ki kötés, hogy mi alapján keressen a Backtrack alkatrészeket
         Alkatresz alkatreszKikotes; //ez lesz az az alkatrész amire a kikötés szól
+        List<Auto> autok;
+        List<Auto> osszesAuto;
+
+        public List<Auto> OsszesAuto
+        {
+            get { return osszesAuto; }
+            set { osszesAuto = value; }
+        }
+
+        public List<Auto> Autok
+        {
+            get { return autok; }
+            set { autok = value; }
+        }
 
         public Alkatresz AlkatreszKikotes
         {
@@ -319,56 +73,66 @@ namespace Prog2_Beadando
         /// </summary>
         public void Teszt()
         {
-            Console.WriteLine("Beolvasott sorok:");
-            foreach (string item in txtSorai)
+            //Console.WriteLine("Beolvasott sorok:");
+            //foreach (string item in txtSorai)
+            //{
+            //    Console.WriteLine(item);
+            //}
+
+            //Console.WriteLine("\nLista tartalma");
+            //foreach (IAlkatresz item in alkatreszek)
+            //{
+            //    Console.WriteLine("típus: {0}, név: {1}, súly: {2}, ár: {3}", item.Tipus, item.Nev, item.Suly, item.Ar);
+            //}
+
+            //Console.WriteLine("\nvalamelyik elem kompatibilis elemei");
+            //foreach (Alkatresz item in alkatreszek[0].KompatibilisElektronika)
+            //{
+            //    Console.WriteLine("elektronika: " + item);
+            //}
+            //foreach (Alkatresz item in alkatreszek[0].KompatibilisFekrendszer)
+            //{
+            //    Console.WriteLine("fék: " + item);
+            //}
+            //foreach (Alkatresz item in alkatreszek[0].KompatibilisLegszuro)
+            //{
+            //    Console.WriteLine("légszűrő: " + item);
+            //}
+            //foreach (Alkatresz item in alkatreszek[0].KompatibilisValto)
+            //{
+            //    Console.WriteLine("váltó: " + item);
+            //}
+
+            //Console.WriteLine("\nKikötés");
+            //Console.WriteLine(alkatreszKikotes.Nev);
+
+            //Console.WriteLine("\nAuto motorja: " + auto.Motor.Nev);
+
+            //Console.WriteLine("\nÖsszes kompatibilis elem listája");
+            //foreach (Alkatresz item in alkatreszek[0].OsszesKompatibilisAlkatresz)
+            //{
+            //    Console.WriteLine("neve: " + item.Nev + "típusa: " + item.Tipus);
+            //}
+
+            //Console.WriteLine("\n létrehozott autok:");
+            //foreach (var item in autok)
+            //{
+            //    Console.WriteLine("auto motorja: " + item.Motor.Nev);
+            //    Console.WriteLine("auto féke: " + item.Fekrendszer.Nev);
+            //    Console.WriteLine("auto váltója: " + item.Valto.Nev);
+            //    Console.WriteLine("auto légszűrője: " + item.Legszuro.Nev);
+            //    Console.WriteLine("auto elektronikája: " + item.Elektronika.Nev);
+            //}
+
+            Console.WriteLine("\nLétrehozott Autok súlya és ára");
+            int i = 1;
+            foreach (var item in autok)
             {
-                Console.WriteLine(item);
+                Console.WriteLine(i + ". auto súlya: " + item.AutoSulya());
+                Console.WriteLine(i + ". auto ára: " + item.AutoAra());
+                i++;
             }
 
-            Console.WriteLine("\nLista tartalma");
-            foreach (IAlkatresz item in alkatreszek)
-            {
-                Console.WriteLine("típus: {0}, név: {1}, súly: {2}, ár: {3}", item.Tipus, item.Nev, item.Suly, item.Ar);
-            }
-
-            Console.WriteLine("\nvalamelyik elem kompatibilis elemei");
-            foreach (Alkatresz item in alkatreszek[0].KompatibilisElektronika)
-            {
-                Console.WriteLine("elektronika: " + item);
-            }
-            foreach (Alkatresz item in alkatreszek[0].KompatibilisFekrendszer)
-            {
-                Console.WriteLine("fék: " + item);
-            }
-            foreach (Alkatresz item in alkatreszek[0].KompatibilisLegszuro)
-            {
-                Console.WriteLine("légszűrő: " + item);
-            }
-            foreach (Alkatresz item in alkatreszek[0].KompatibilisValto)
-            {
-                Console.WriteLine("váltó: " + item);
-            }
-
-            Console.WriteLine("\nKikötés");
-            Console.WriteLine(alkatreszKikotes.Nev);
-
-            //alkatreszek[5].Beepit(auto);
-            //alkatreszek[1].Beepit(auto);
-            //alkatreszek[2].Beepit(auto);
-            //alkatreszek[3].Beepit(auto);
-            //alkatreszek[4].Beepit(auto);
-            //Console.WriteLine("kocsi váltója: " + auto.Valto.Nev);
-            //Console.WriteLine("Kocsi féke: " + auto.Fekrendszer.Nev);
-            //Console.WriteLine("kocsi légsz: " + auto.Legszuro.Nev);
-            //Console.WriteLine("kocsi elektr: " + auto.Elektronika.Nev);
-
-            Console.WriteLine("\nAuto motorja: " + auto.Motor.Nev);
-
-            Console.WriteLine("\nÖsszes kompatibilis elem listája");
-            foreach (Alkatresz item in alkatreszek[0].OsszesKompatibilisAlkatresz)
-            {
-                Console.WriteLine("neve: " + item.Nev + "típusa: " + item.Tipus);
-            }
         }
 
         /// <summary>
@@ -441,8 +205,7 @@ namespace Prog2_Beadando
                     return item;
                 }
             }
-            Console.WriteLine("nem talált ilyen névvel alkatreszt: " + nev);
-            throw new Exception();
+            throw new NemTalalNevetException(nev);
         }
 
         /// <summary>
@@ -471,7 +234,7 @@ namespace Prog2_Beadando
             }
         }
 
-        public void Backtrack(Alkatresz alkatresz)
+        public void Backtrack(Alkatresz alkatresz, Auto auto, Alkatresz alkatreszKikotes)
         {
             if (auto.Elektronika != null && auto.Fekrendszer != null && auto.Legszuro != null && auto.Motor != null && auto.Valto != null)
             {
@@ -505,10 +268,14 @@ namespace Prog2_Beadando
                             {
                                 throw new NemTalaltAlkatresztException(alkatresz);
                             }
+                            else if (auto.Valto == null)
+                            {
+                                throw new NemTalaltAlkatresztException(alkatresz);
+                            }
                         }
                         if (auto.Valto != null)
                         {
-                            Backtrack(auto.Valto);   
+                            Backtrack(auto.Valto, auto, alkatreszKikotes);   
                         }
                         break;
                     case Tipus.legszuro:
@@ -534,10 +301,14 @@ namespace Prog2_Beadando
                             {
                                 throw new NemTalaltAlkatresztException(alkatresz);
                             }
+                            else if (auto.Fekrendszer == null)
+                            {
+                                throw new NemTalaltAlkatresztException(alkatresz);
+                            }
                         }
-                        if(auto.Legszuro != null)
+                        if(auto.Fekrendszer != null)
                         {
-                            Backtrack(auto.Fekrendszer);
+                            Backtrack(auto.Fekrendszer, auto, alkatreszKikotes);
                         }
                         break;
                     case Tipus.fekrendszer:
@@ -563,10 +334,14 @@ namespace Prog2_Beadando
                             {
                                 throw new NemTalaltAlkatresztException(alkatresz);
                             }
+                            else if (auto.Elektronika == null)
+                            {
+                                throw new NemTalaltAlkatresztException(alkatresz);
+                            }
                         }
                         if (auto.Elektronika != null)
                         {
-                            Backtrack(auto.Elektronika);
+                            Backtrack(auto.Elektronika, auto, alkatreszKikotes);
                         }
                         break;
                     case Tipus.elektronika:
@@ -592,10 +367,14 @@ namespace Prog2_Beadando
                             {
                                 throw new NemTalaltAlkatresztException(alkatresz);
                             }
+                            else if (auto.Motor == null)
+                            {
+                                throw new NemTalaltAlkatresztException(alkatresz);
+                            }
                         }
                         if (auto.Motor != null)
                         {
-                            Backtrack(auto.Motor);
+                            Backtrack(auto.Motor, auto, alkatreszKikotes);
                         }
                         break;
                     case Tipus.valto:
@@ -621,54 +400,135 @@ namespace Prog2_Beadando
                             {
                                 throw new NemTalaltAlkatresztException(alkatresz);
                             }
+                            else if (auto.Legszuro == null)
+                            {
+                                throw new NemTalaltAlkatresztException(alkatresz);
+                            }
                         }
                         if(auto.Legszuro != null)
                         {
-                            Backtrack(auto.Legszuro);
+                            Backtrack(auto.Legszuro, auto, alkatreszKikotes);
                         }
                         break;
                 }
             }
-            
+        }
+
+        public void AutokatLetrehoz()
+        {
+            for (int i = 0; i < alkatreszek.Count; i++)
+            {
+                if (osszesAuto == null)
+                {
+                    osszesAuto = new List<Auto>();
+                }
+
+                osszesAuto.Add(new Auto());
+                alkatreszek[i].Beepit(osszesAuto[(osszesAuto.Count - 1)]);
+                try
+                {
+                    Backtrack(alkatreszek[i], osszesAuto[(osszesAuto.Count - 1)], alkatreszek[i]);
+                }
+                catch (NemTalaltAlkatresztException)
+                {
+                    osszesAuto.Remove(osszesAuto[(osszesAuto.Count - 1)]);
+                }
+            }
+
+            foreach (var item in osszesAuto)
+            {
+                if (autok == null)
+                {
+                    autok = new List<Auto>();
+                    autok.Add(item);
+                }
+                else if (!VanEMarIlyenAuto(autok, item))
+                {
+                    autok.Add(item);
+                }
+            }
+        }
+
+        bool VanEMarIlyenAuto(List<Auto> autok, Auto auto)
+        {
+            foreach (Auto item in autok)
+            {
+                if (item.Equals(auto))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public Auto LegkonyebbAuto(List<Auto> autok)
+        {
+            int index = 0;
+            int min = int.MaxValue;
+            for (int i = 0; i < autok.Count; i++)
+            {
+                if (min > autok[i].AutoSulya())
+                {
+                    min = autok[i].AutoSulya();
+                    index = i;
+                }
+            }
+            return autok[index];
+        }
+
+        public Auto LegOlcsobbAuto(List<Auto> autok)
+        {
+            int index = 0;
+            int min = int.MaxValue;
+            for (int i = 0; i < autok.Count; i++)
+            {
+                if (min > autok[i].AutoAra())
+                {
+                    min = autok[i].AutoAra();
+                    index = i;
+                }
+            }
+
+            return autok[index];
         }
 
         /// <summary>
         /// Kikeresei az adott alkatrész istából a legkönyebb alkatrészt
         /// </summary>
-        Alkatresz Legkonnyebb(List<Alkatresz> alkatreszek)
-        {
-            int index = 0;
-            int min = int.MaxValue;
-            for (int i = 0; i < alkatreszek.Count; i++)
-            {
-                if (alkatreszek[i].Suly < min)
-                {
-                    min = alkatreszek[i].Suly;
-                    index = i;
-                }
-            }
+        //Alkatresz Legkonnyebb(List<Alkatresz> alkatreszek)
+        //{
+        //    int index = 0;
+        //    int min = int.MaxValue;
+        //    for (int i = 0; i < alkatreszek.Count; i++)
+        //    {
+        //        if (alkatreszek[i].Suly < min)
+        //        {
+        //            min = alkatreszek[i].Suly;
+        //            index = i;
+        //        }
+        //    }
 
-            return alkatreszek[index]; 
-        }
+        //    return alkatreszek[index]; 
+        //}
 
         /// <summary>
         /// Kikeresi az adott alaktrész listából a legolcsóbb alkatrészt
         /// </summary>
-        Alkatresz Legolcsobb(List<Alkatresz> alkatreszek)
-        {
-            int index = 0;
-            int min = int.MaxValue;
-            for (int i = 0; i < alkatreszek.Count; i++)
-            {
-                if (alkatreszek[i].Ar < min)
-                {
-                    min = alkatreszek[i].Ar;
-                    index = i;
-                }
-            }
+        //Alkatresz Legolcsobb(List<Alkatresz> alkatreszek)
+        //{
+        //    int index = 0;
+        //    int min = int.MaxValue;
+        //    for (int i = 0; i < alkatreszek.Count; i++)
+        //    {
+        //        if (alkatreszek[i].Ar < min)
+        //        {
+        //            min = alkatreszek[i].Ar;
+        //            index = i;
+        //        }
+        //    }
 
-            return alkatreszek[index];
-        }
+        //    return alkatreszek[index];
+        //}
 
         /// <summary>
         /// Megnézi, hogy két alkatrész kompatibilis-e egymással

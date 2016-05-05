@@ -46,12 +46,13 @@
     <Compile Include="Auto.cs" />
     <Compile Include="BeepitException.cs" />
     <Compile Include="BenzinMotor.cs" />
-    <Compile Include="Beolvasas.cs" />
+    <Compile Include="Feldolgoz.cs" />
     <Compile Include="Elektronika.cs" />
     <Compile Include="Fekrendszer.cs" />
     <Compile Include="IAlkatresz.cs" />
     <Compile Include="Legszuro.cs" />
     <Compile Include="Motor.cs" />
+    <Compile Include="NemTalalNevetException.cs" />
     <Compile Include="NemTalaltAlkatresztException.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

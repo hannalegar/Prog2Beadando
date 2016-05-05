@@ -42,5 +42,37 @@ namespace Prog2_Beadando
             get { return valto; }
             set { valto = value; }
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+
+            if ((obj as Auto).Elektronika == this.Elektronika && (obj as Auto).Fekrendszer == this.Fekrendszer && (obj as Auto).Legszuro == this.Legszuro && (obj as Auto).Motor == this.motor && (obj as Auto).Valto == this.Valto)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public int AutoSulya()
+        {
+            return Motor.Suly + Valto.Suly + Fekrendszer.Suly + Elektronika.Suly + Legszuro.Suly;
+        }
+
+        public int AutoAra()
+        {
+            return Motor.Ar + Elektronika.Ar + Fekrendszer.Ar + Legszuro.Ar + Valto.Ar;
+        }
     }
 }
