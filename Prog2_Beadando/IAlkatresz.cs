@@ -9,6 +9,8 @@ namespace Prog2_Beadando
 
     interface IAlkatresz
     {
+        //Az alkatrész abstract osztályban, ami megvalósítja az interfészt le van írva minden, hogy mi micsoda illetve hogy mire való, iért lett létrehozva
+
         string Nev { get; set; }
         int Suly { get; set; }
         int Ar { get; set; }

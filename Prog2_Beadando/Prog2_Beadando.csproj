@@ -54,6 +54,7 @@
     <Compile Include="Motor.cs" />
     <Compile Include="NemTalalNevetException.cs" />
     <Compile Include="NemTalaltAlkatresztException.cs" />
+    <Compile Include="OptimalizacioException.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Valto.cs" />

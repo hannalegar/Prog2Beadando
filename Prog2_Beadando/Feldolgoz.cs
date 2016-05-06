@@ -13,10 +13,12 @@ namespace Prog2_Beadando
         string filename; //a file neve amit szeretnénk, hogy a program feldolgozzon
         List<string> txtSorai; //a beolvasott txt sorait tárolja el
         List<Alkatresz> alkatreszek; //a fileban megadott alkatrészeket fogja eltárolni
-        string optimalizacioKikotes; //Aszerinti ki kötés, hogy mi alapján keressen a Backtrack alkatrészeket
+        string optimalizacioKikotes; //Aszerinti kikötés, hogy mi alapján keressen a Backtrack alkatrészeket
         Alkatresz alkatreszKikotes; //ez lesz az az alkatrész amire a kikötés szól
-        List<Auto> autok;
-        List<Auto> osszesAuto;
+        List<Auto> autok; //Ebben vannak eltárolva a létrehozott autok, de már minden auto, csak egyszer szerepel benne
+        List<Auto> osszesAuto; //Ebben van eltárolva az összes autot, ez még egy redundás lista, mivel lehet h két alkatrészhez, pont ugyan azt az utot lehet létrehozni
+        Auto auto; //Auto, amiben az az alkatrész szerepel amiben az auto optimalizzációt keressük
+        Auto auto2; //Optimalizáció visszatérési értéke lesz ebben eltárolva
 
         public List<Auto> OsszesAuto
         {
@@ -35,8 +37,6 @@ namespace Prog2_Beadando
             get { return alkatreszKikotes; }
             set { alkatreszKikotes = value; }
         }
-        //List<Alkatresz> autova; //ezekből az alkatrészekből fog összeállni egy auto
-        Auto auto;
 
         public Auto Auto
         {
@@ -44,13 +44,25 @@ namespace Prog2_Beadando
             set { auto = value; }
         }
 
-
         public Feldolgoz(string filename)
         {
             this.auto = new Auto();
             this.filename = filename;
             this.txtSorai = new List<string>();
             this.alkatreszek = new List<Alkatresz>(); 
+        }
+
+        /// <summary>
+        /// A megfelelő sorrendben meghívja a metódusokat, és nem kell egyesével a sorrendre figyelve megcsinálni
+        /// </summary>
+        public void MindentFeldolgoz()
+        {
+            this.Beolvas();
+            this.Letrehoz();
+            this.GrafotLetrehoz();
+            this.Kikotes();
+            this.AutokatLetrehoz();
+            auto2 = this.Optimalizacio(optimalizacioKikotes);
         }
 
         /// <summary>
@@ -73,17 +85,17 @@ namespace Prog2_Beadando
         /// </summary>
         public void Teszt()
         {
-            //Console.WriteLine("Beolvasott sorok:");
-            //foreach (string item in txtSorai)
-            //{
-            //    Console.WriteLine(item);
-            //}
+            Console.WriteLine("Beolvasott sorok:");
+            foreach (string item in txtSorai)
+            {
+                Console.WriteLine(item);
+            }
 
-            //Console.WriteLine("\nLista tartalma");
-            //foreach (IAlkatresz item in alkatreszek)
-            //{
-            //    Console.WriteLine("típus: {0}, név: {1}, súly: {2}, ár: {3}", item.Tipus, item.Nev, item.Suly, item.Ar);
-            //}
+            Console.WriteLine("\nLista tartalma");
+            foreach (IAlkatresz item in alkatreszek)
+            {
+                Console.WriteLine("típus: {0}, név: {1}, súly: {2}, ár: {3}", item.Tipus, item.Nev, item.Suly, item.Ar);
+            }
 
             //Console.WriteLine("\nvalamelyik elem kompatibilis elemei");
             //foreach (Alkatresz item in alkatreszek[0].KompatibilisElektronika)
@@ -103,26 +115,22 @@ namespace Prog2_Beadando
             //    Console.WriteLine("váltó: " + item);
             //}
 
-            //Console.WriteLine("\nKikötés");
-            //Console.WriteLine(alkatreszKikotes.Nev);
+            Console.WriteLine("\nKikötés");
+            Console.WriteLine(alkatreszKikotes.Nev);
 
-            //Console.WriteLine("\nAuto motorja: " + auto.Motor.Nev);
+            Console.WriteLine("\nA kikötéssel összes kompatibilis elem listája");
+            foreach (Alkatresz item in alkatreszKikotes.OsszesKompatibilisAlkatresz)
+            {
+                Console.WriteLine("neve: " + item.Nev + "típusa: " + item.Tipus);
+            }
 
-            //Console.WriteLine("\nÖsszes kompatibilis elem listája");
-            //foreach (Alkatresz item in alkatreszek[0].OsszesKompatibilisAlkatresz)
-            //{
-            //    Console.WriteLine("neve: " + item.Nev + "típusa: " + item.Tipus);
-            //}
-
-            //Console.WriteLine("\n létrehozott autok:");
-            //foreach (var item in autok)
-            //{
-            //    Console.WriteLine("auto motorja: " + item.Motor.Nev);
-            //    Console.WriteLine("auto féke: " + item.Fekrendszer.Nev);
-            //    Console.WriteLine("auto váltója: " + item.Valto.Nev);
-            //    Console.WriteLine("auto légszűrője: " + item.Legszuro.Nev);
-            //    Console.WriteLine("auto elektronikája: " + item.Elektronika.Nev);
-            //}
+            Console.WriteLine("\nlétrehozott autok:");
+            int j = 0;
+            foreach (var item in autok)
+            {
+                Console.WriteLine(j + ". auto:\n" + item.ToString());
+                j++;
+            }
 
             Console.WriteLine("\nLétrehozott Autok súlya és ára");
             int i = 1;
@@ -132,6 +140,14 @@ namespace Prog2_Beadando
                 Console.WriteLine(i + ". auto ára: " + item.AutoAra());
                 i++;
             }
+
+            Console.WriteLine("\nA legkönyebb auto súlya: " + this.LegkonyebbAuto(Autok).AutoSulya());
+            Console.WriteLine("Legkonyebb auto alkatrészei:\n" + this.LegkonyebbAuto(Autok).ToString());
+            Console.WriteLine("\nA legolcsóbb autó ára: " + this.LegOlcsobbAuto(Autok).AutoAra());
+            Console.WriteLine("Legolcsóbb auto alkatrészei:\n" + this.LegOlcsobbAuto(Autok).ToString());
+
+            Console.WriteLine("\nAz optimalizáció visszatérési értéke:");
+            Console.WriteLine(auto2.ToString());
 
         }
 
@@ -238,7 +254,7 @@ namespace Prog2_Beadando
         {
             if (auto.Elektronika != null && auto.Fekrendszer != null && auto.Legszuro != null && auto.Motor != null && auto.Valto != null)
             {
-                Console.WriteLine("Kész az auto");
+                //Console.WriteLine("Kész az auto");
             }
             else
             {
@@ -414,6 +430,10 @@ namespace Prog2_Beadando
             }
         }
 
+        /// <summary>
+        /// Minden alkatrészhez létrehoz egy auto, ha tud. (Minden alkatrészre meghívja a Backtracket, mintha az lenne a kikötés, aminek mindenképpen benne kell lennie az autoban,
+        /// ezáltal létrejön az összeas auto, amit a bemenet alapján létre lehet hozni)
+        /// </summary>
         public void AutokatLetrehoz()
         {
             for (int i = 0; i < alkatreszek.Count; i++)
@@ -449,6 +469,9 @@ namespace Prog2_Beadando
             }
         }
 
+        /// <summary>
+        /// Megnézi, hogy egy adott lista tartalmazz-e már az adott Autot
+        /// </summary>
         bool VanEMarIlyenAuto(List<Auto> autok, Auto auto)
         {
             foreach (Auto item in autok)
@@ -461,6 +484,9 @@ namespace Prog2_Beadando
             return false;
         }
 
+        /// <summary>
+        /// Kikeresi a létrehozott Autokból a legkönnyebb autot
+        /// </summary>
         public Auto LegkonyebbAuto(List<Auto> autok)
         {
             int index = 0;
@@ -476,6 +502,9 @@ namespace Prog2_Beadando
             return autok[index];
         }
 
+        /// <summary>
+        /// Kikeresi a létrehozott Autokból a legolcsobb autot
+        /// </summary>
         public Auto LegOlcsobbAuto(List<Auto> autok)
         {
             int index = 0;
@@ -493,49 +522,39 @@ namespace Prog2_Beadando
         }
 
         /// <summary>
-        /// Kikeresei az adott alkatrész istából a legkönyebb alkatrészt
+        /// Olyan autot ad vissza ami az optimalizációnak megfelel
+        /// Ha nincs megadva, csak hogy egy alkatrész benne legyen, akkor vissza adja az első olyan autot ami azt az alkatreszt tartalmazza
+        /// Ha a legkönyebb autot keressük, akkor azt adja viisza, ugyanígy az árral
         /// </summary>
-        //Alkatresz Legkonnyebb(List<Alkatresz> alkatreszek)
-        //{
-        //    int index = 0;
-        //    int min = int.MaxValue;
-        //    for (int i = 0; i < alkatreszek.Count; i++)
-        //    {
-        //        if (alkatreszek[i].Suly < min)
-        //        {
-        //            min = alkatreszek[i].Suly;
-        //            index = i;
-        //        }
-        //    }
-
-        //    return alkatreszek[index]; 
-        //}
-
-        /// <summary>
-        /// Kikeresi az adott alaktrész listából a legolcsóbb alkatrészt
-        /// </summary>
-        //Alkatresz Legolcsobb(List<Alkatresz> alkatreszek)
-        //{
-        //    int index = 0;
-        //    int min = int.MaxValue;
-        //    for (int i = 0; i < alkatreszek.Count; i++)
-        //    {
-        //        if (alkatreszek[i].Ar < min)
-        //        {
-        //            min = alkatreszek[i].Ar;
-        //            index = i;
-        //        }
-        //    }
-
-        //    return alkatreszek[index];
-        //}
-
-        /// <summary>
-        /// Megnézi, hogy két alkatrész kompatibilis-e egymással
-        /// </summary>
-        //bool Kompatibilis(Alkatresz alkatreszMi, Alkatresz alkatereszMivel)
-        //{
-        //    return alkatereszMivel.KompatibilisElektronika.Contains(alkatreszMi) || alkatereszMivel.KompatibilisFekrendszer.Contains(alkatreszMi) || alkatereszMivel.KompatibilisLegszuro.Contains(alkatreszMi) || alkatereszMivel.KompatibilisMotorok.Contains(alkatreszMi) || alkatereszMivel.KompatibilisValto.Contains(alkatreszMi);
-        //}
+        /// <param name="kikotes"></param>
+        /// <returns></returns>
+        public Auto Optimalizacio(string kikotes)
+        {
+            if (kikotes == "súly")
+            {
+                return this.LegkonyebbAuto(autok);
+            }
+            else if(kikotes == "ár")
+            {
+                return this.LegOlcsobbAuto(autok);
+            }
+            else if(kikotes == "a kikötésben szereplő alkatrész legyen benne")
+            {
+                try
+                {
+                    this.Backtrack(alkatreszKikotes, auto, alkatreszKikotes);
+                    return this.Auto;
+                }
+                catch (NemTalaltAlkatresztException)
+                {
+                    throw;
+                }
+                
+            }
+            else
+            {
+                throw new OptimalizacioException();
+            }
+        }
     }
 }

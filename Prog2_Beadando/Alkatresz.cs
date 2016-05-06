@@ -43,6 +43,9 @@ namespace Prog2_Beadando
             set { mukodokepes = value; }
         }
 
+        /// <summary>
+        /// Ebben a listában el van tárolva az össze alkatrész, amivel ez az alkatrész kompatibilis
+        /// </summary>
         List<Alkatresz> osszesKompatibilisAlkatresz;
         public List<Alkatresz> OsszesKompatibilisAlkatresz
         {
@@ -80,6 +83,11 @@ namespace Prog2_Beadando
         {
             get { return kompatibilisLegszuro; }
         }
+        
+        /// <summary>
+        /// Beépíti az alkatrészt az Autoba, ha a már beépített alkatrészekkel kompatibilis
+        /// HA nem tudja beépíteni hibát dob
+        /// </summary>
         public void Beepit(Auto auto)
         {
             if (this.KompatibilisTobbiAlkatresszel(auto))
@@ -109,6 +117,9 @@ namespace Prog2_Beadando
             }
         }
 
+        /// <summary>
+        /// Elromlás esetén meghívódik ez a metódus
+        /// </summary>
         public virtual void Elromlik()
         {
             throw new NotImplementedException();
@@ -200,6 +211,12 @@ namespace Prog2_Beadando
             this.mukodokepes = true;
         }
 
+        /// <summary>
+        /// Visszaadja, hiogy egy autoba be lehete-e építeni ezt az alkatrészt. Akkor ad vissza igazat ha az i = 5.
+        /// Megnézi, hogy az autoban van e olya, hogy még nincs beépítbe alkatrész, ha igen akkor növeli eggyel az i -értékét, mert azzal egészen biztosan kompatibilis ez az alkatrész. 
+        /// Majd megnézi, hogy a már beépített alkatrészek, kompatibilisek-e ezzel az alkatrésszel, ha igen akkor eggyel növeli az i-értékét
+        /// Ha az i eléri az 5-öt, az azt jelenti, hogy be lehet építeni, mert mindennel kompatibilis
+        /// </summary>
         bool KompatibilisTobbiAlkatresszel(Auto auto)
         {
             int i = 0;
@@ -247,56 +264,11 @@ namespace Prog2_Beadando
             return i == 5;
         }
 
+        /// <summary>
+        /// Vissza adja, hogy egy adott alkatrész tartalmazz-e ezt az alkatrészt
+        /// </summary>
         bool KompatiblisValamivel(Alkatresz alkatresz)
         {
-            /*
-            int i = 0;
-            if (alkatresz.kompatibilisElektronika == null)
-            {
-                i++;
-            }
-            if (alkatresz.kompatibilisFekrendszer == null)
-            {
-                i++;
-            }
-            if (alkatresz.KompatibilisLegszuro == null)
-            {
-                i++;
-            }
-            if (alkatresz.KompatibilisMotorok == null)
-            {
-                i++;
-            }
-            if (alkatresz.KompatibilisValto == null)
-            {
-                i++;
-            }
-
-            if (alkatresz.kompatibilisElektronika != null && alkatresz.KompatibilisElektronika.Contains(this))
-            {
-                i++;
-            }
-            if (alkatresz.kompatibilisFekrendszer != null && alkatresz.KompatibilisFekrendszer.Contains(this))
-            {
-                i++;
-            }
-            if (alkatresz.kompatibilisLegszuro != null && alkatresz.kompatibilisLegszuro.Contains(this))
-            {
-                i++;
-            }
-            if (alkatresz.kompatibilisMotorok != null && alkatresz.kompatibilisMotorok.Contains(this))
-            {
-                i++;
-            }
-            if (alkatresz.KompatibilisValto != null && alkatresz.KompatibilisValto.Contains(this))
-            {
-                i++;
-            }
-
-            return i == 5;
-            */
-
-
             return alkatresz.osszesKompatibilisAlkatresz.Contains(this);
         }
     }

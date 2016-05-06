@@ -8,6 +8,9 @@ namespace Prog2_Beadando
 {
     class Auto
     {
+        /// <summary>
+        /// Az auto motorját tárolja
+        /// </summary>
         Motor motor;
         public Motor Motor
         {
@@ -15,6 +18,9 @@ namespace Prog2_Beadando
             set { motor = value; }
         }
 
+        /// <summary>
+        /// Az auto fékrendszerét tárolja
+        /// </summary>
         Fekrendszer fekrendszer;
         public Fekrendszer Fekrendszer
         {
@@ -22,6 +28,9 @@ namespace Prog2_Beadando
             set { fekrendszer = value; }
         }
 
+        /// <summary>
+        /// Az auto légszűrőjét tárolja
+        /// </summary>
         Legszuro legszuro;
         public Legszuro Legszuro
         {
@@ -29,6 +38,9 @@ namespace Prog2_Beadando
             set { legszuro = value; }
         }
 
+        /// <summary>
+        /// Az auto elektronikáját tárolja
+        /// </summary>
         Elektronika elektronika;
         public Elektronika Elektronika
         {
@@ -36,6 +48,9 @@ namespace Prog2_Beadando
             set { elektronika = value; }
         }
 
+        /// <summary>
+        /// Az auto váltóját tárolja
+        /// </summary>
         Valto valto;
         public Valto Valto
         {
@@ -43,6 +58,10 @@ namespace Prog2_Beadando
             set { valto = value; }
         }
 
+        /// <summary>
+        /// Megnézi, hogy két auto megegyezik-e.
+        /// Azaz ha ugyan az a motorjuk, fékük, légszűrőjük, fékrendszerük illetve váltújuk, akkor igazat ad vissza, egyébként hamis
+        /// </summary>
         public override bool Equals(object obj)
         {
             if (obj == null)
@@ -65,14 +84,29 @@ namespace Prog2_Beadando
             return base.GetHashCode();
         }
 
+        /// <summary>
+        /// Vissza adja az auto súlyát
+        /// </summary>
+        /// <returns></returns>
         public int AutoSulya()
         {
             return Motor.Suly + Valto.Suly + Fekrendszer.Suly + Elektronika.Suly + Legszuro.Suly;
         }
 
+        /// <summary>
+        /// vissza adja az auto árát
+        /// </summary>
         public int AutoAra()
         {
             return Motor.Ar + Elektronika.Ar + Fekrendszer.Ar + Legszuro.Ar + Valto.Ar;
+        }
+
+        /// <summary>
+        /// Auto adatait vissza adja egy stringben
+        /// </summary>
+        public override string ToString()
+        {
+            return string.Format("Auto motorja: {0}\nAuto elektronikája: {1}\nAuto fékrendszere: {2}\nAuto légszűrője: {3}\nAuto váltója: {4}", this.motor.Nev, this.elektronika.Nev, this.fekrendszer.Nev, this.Legszuro.Nev, this.Valto.Nev);
         }
     }
 }

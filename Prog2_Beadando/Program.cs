@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace Prog2_Beadando
 {
@@ -18,91 +19,48 @@ namespace Prog2_Beadando
     {
         static void Main(string[] args)
         {
-            Feldolgoz feldogoz1 = new Feldolgoz("Proba.txt");
-            feldogoz1.Beolvas();
-            feldogoz1.Letrehoz();
-            feldogoz1.GrafotLetrehoz();
-            feldogoz1.Kikotes();
-            feldogoz1.Backtrack(feldogoz1.AlkatreszKikotes, feldogoz1.Auto, feldogoz1.AlkatreszKikotes);
-            feldogoz1.AutokatLetrehoz();
-
-            feldogoz1.Teszt();
-
-            //try
-            //{
-            //    Feldolgoz feldolgoz2 = new Feldolgoz("Proba3.txt");
-            //    feldolgoz2.Beolvas();
-            //    feldolgoz2.Letrehoz();
-            //    feldolgoz2.GrafotLetrehoz();
-            //    feldolgoz2.Kikotes();
-            //    feldolgoz2.AutokatLetrehoz();
-
-            //    feldolgoz2.Teszt();
-
-            //    feldolgoz2.Backtrack(feldolgoz2.AlkatreszKikotes, feldolgoz2.Auto, feldolgoz2.AlkatreszKikotes);
-                
-
-            //}
-            //catch (NemTalaltAlkatresztException e)
-            //{
-            //    Console.WriteLine("Nem talált alkatrészt: " + e.Alkatresz.Nev);
-            //}
-
-            //try
-            //{
-            //    Feldolgoz feldolgoz3 = new Feldolgoz("Proba2.txt");
-            //    feldolgoz3.Beolvas();
-            //    feldolgoz3.Letrehoz();
-            //    feldolgoz3.GrafotLetrehoz();
-            //    feldolgoz3.Kikotes();
-            //    feldolgoz3.AutokatLetrehoz();
-
-            //    feldolgoz3.Teszt();
-
-            //    feldolgoz3.Backtrack(feldolgoz3.AlkatreszKikotes, feldolgoz3.Auto, feldolgoz3.AlkatreszKikotes);
-
-            //}
-            //catch (NemTalaltAlkatresztException e)
-            //{
-            //    Console.WriteLine("Nem talált alkatrészt: " + e.Alkatresz.Nev);
-            //}
+            //Proba.txt, Proba2.txt, Proba3.txt, Proba4.txt <-- tesztelés céljából hoztam létre őket
 
             try
             {
-                Feldolgoz feldogoz4 = new Feldolgoz("Proba4.txt");
-                feldogoz4.Beolvas();
-                feldogoz4.Letrehoz();
-                feldogoz4.GrafotLetrehoz();
-                feldogoz4.AutokatLetrehoz();
-                feldogoz4.Teszt();
+                Feldolgoz feldolgoz1 = new Feldolgoz("Proba.txt");
+                feldolgoz1.MindentFeldolgoz();
+                feldolgoz1.Teszt();
 
-                Console.WriteLine("A legkönnyebb auto súlya: " + feldogoz4.LegkonyebbAuto(feldogoz4.Autok).AutoSulya());
-                Console.WriteLine("motorja: " + feldogoz4.LegkonyebbAuto(feldogoz4.Autok).Motor.Nev);
-                Console.WriteLine("féke: " + feldogoz4.LegkonyebbAuto(feldogoz4.Autok).Fekrendszer.Nev);
-                Console.WriteLine("légsz: " + feldogoz4.LegkonyebbAuto(feldogoz4.Autok).Legszuro.Nev);
-                Console.WriteLine("váltó: " + feldogoz4.LegkonyebbAuto(feldogoz4.Autok).Valto.Nev);
-                Console.WriteLine("elektr.: " + feldogoz4.LegkonyebbAuto(feldogoz4.Autok).Elektronika.Nev);
+                Feldolgoz feldolgoz2 = new Feldolgoz("Proba2.txt");
+                feldolgoz2.MindentFeldolgoz();
+                feldolgoz2.Teszt();
 
-                Console.WriteLine("A legolcsobb auto ára: " + feldogoz4.LegOlcsobbAuto(feldogoz4.Autok).AutoAra());
-                Console.WriteLine("motorja: " + feldogoz4.LegOlcsobbAuto(feldogoz4.Autok).Motor.Nev);
-                Console.WriteLine("féke: " + feldogoz4.LegOlcsobbAuto(feldogoz4.Autok).Fekrendszer.Nev);
-                Console.WriteLine("légsz: " + feldogoz4.LegOlcsobbAuto(feldogoz4.Autok).Legszuro.Nev);
-                Console.WriteLine("váltó: " + feldogoz4.LegOlcsobbAuto(feldogoz4.Autok).Valto.Nev);
-                Console.WriteLine("elektr.: " + feldogoz4.LegOlcsobbAuto(feldogoz4.Autok).Elektronika.Nev);
+                Feldolgoz feldolgoz3 = new Feldolgoz("Proba3.txt");
+                feldolgoz3.MindentFeldolgoz();
+                feldolgoz3.Teszt();
 
-                Console.ReadLine();
-
+                Feldolgoz feldolgoz4 = new Feldolgoz("Proba4.txt");
+                feldolgoz4.MindentFeldolgoz();
+                feldolgoz4.Teszt();
+            }
+            catch (FileNotFoundException)
+            {
+                Console.WriteLine("Rosszul lett megadva fájl név, vagy nem létezik amit fel szeretne dolgozni!");
             }
             catch (NemTalalNevetException e)
             {
-                Console.WriteLine("Ilyen névvel nem talált alkatreszt: " + e.Nev);
+                Console.WriteLine("ilyen névvel nem lett alkatrész létrehozva: " + e.Nev + "!");
+            }
+            catch (NemTalaltAlkatresztException e)
+            {
+                Console.WriteLine("Az adott alkatrészhez nem lehet autot összeállítani: " + e.Alkatresz.Nev + "!");
+            }
+            catch (OptimalizacioException)
+            {
+                Console.WriteLine("Optimalizáció megadása nem jó!");
             }
             catch (Exception e)
             {
+                Console.WriteLine("Hiba törtnént a programo futtatásakor!");
                 Console.WriteLine(e.ToString());
             }
-
-
+            Console.ReadLine();
         }
     }
 }
