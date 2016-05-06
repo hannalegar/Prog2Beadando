@@ -63,6 +63,7 @@ namespace Prog2_Beadando
             this.Kikotes();
             this.AutokatLetrehoz();
             auto2 = this.Optimalizacio(optimalizacioKikotes);
+            this.Elromlas();
         }
 
         /// <summary>
@@ -555,16 +556,32 @@ namespace Prog2_Beadando
             }
         }
 
+        /// <summary>
+        /// MEgpróbálja elrontani az alkatrészeket
+        /// </summary>
         public void Elromlas()
         {
-            
-         
             foreach (var item in alkatreszek)
             {
                 item.Hasznal();
-                if (!item.MukodoKepes)
+                if (!item.MukodoKepes && item is Motor)
                 {
-                    
+                    MelyikAutoBanVan(item);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Ha talált egy motort ami elromlik, akkor megkeresi, hogy melyik autoba van beépítve, és meghívja abban az utoban a váltónak az elromlik metódusát
+        /// </summary>
+        /// <param name="alkatresz"></param>
+        void MelyikAutoBanVan(Alkatresz alkatresz)
+        {
+            foreach (var item in autok)
+            {
+                if (item.Motor.Nev == alkatresz.Nev)
+                {
+                    item.Valto.Elromlik();
                 }
             }
         }

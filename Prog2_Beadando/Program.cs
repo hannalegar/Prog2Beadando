@@ -26,7 +26,6 @@ namespace Prog2_Beadando
                 Feldolgoz feldolgoz1 = new Feldolgoz("Proba.txt");
                 feldolgoz1.MindentFeldolgoz();
                 feldolgoz1.Teszt();
-                feldolgoz1.Elromlas();
 
                 //Feldolgoz feldolgoz2 = new Feldolgoz("Proba2.txt");
                 //feldolgoz2.MindentFeldolgoz();

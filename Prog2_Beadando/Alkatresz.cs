@@ -11,7 +11,7 @@ namespace Prog2_Beadando
 
     abstract class Alkatresz : IAlkatresz
     {
-        Random rnd = new Random();
+         static Random rnd = new Random();
         
         public event ElromlikEsemeny elromlikEsemeny;
         EsemenyKezeles Ek = new EsemenyKezeles();
@@ -286,8 +286,7 @@ namespace Prog2_Beadando
 
         public void Hasznal()
         {
-
-            if (rnd.Next(0,100) > 25)
+            if ( rnd.Next(0,100) > 50)
             {
                 this.mukodokepes = false;
             }
