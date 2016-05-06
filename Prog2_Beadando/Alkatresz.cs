@@ -6,8 +6,16 @@ using System.Threading.Tasks;
 
 namespace Prog2_Beadando
 {
+    
+        delegate void ElromlikEsemeny(Alkatresz alkatresz);
+
     abstract class Alkatresz : IAlkatresz
     {
+        Random rnd = new Random();
+        
+        public event ElromlikEsemeny elromlikEsemeny;
+        EsemenyKezeles Ek = new EsemenyKezeles();
+
         string nev; //minden alkatrésznek lesz egy neve
         public string Nev
         {
@@ -122,7 +130,11 @@ namespace Prog2_Beadando
         /// </summary>
         public virtual void Elromlik()
         {
-            throw new NotImplementedException();
+            if (elromlikEsemeny == null)
+            {
+                this.elromlikEsemeny += Ek.Elromlik;
+            }
+            elromlikEsemeny(this);
         }
 
         /// <summary>
@@ -271,5 +283,19 @@ namespace Prog2_Beadando
         {
             return alkatresz.osszesKompatibilisAlkatresz.Contains(this);
         }
+
+        public void Hasznal()
+        {
+
+            if (rnd.Next(0,100) > 25)
+            {
+                this.mukodokepes = false;
+            }
+            if (!this.mukodokepes)
+            {
+                this.Elromlik();
+            }
+        }
+
     }
 }

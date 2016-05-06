@@ -46,6 +46,7 @@
     <Compile Include="Auto.cs" />
     <Compile Include="BeepitException.cs" />
     <Compile Include="BenzinMotor.cs" />
+    <Compile Include="EsemenyKezeles.cs" />
     <Compile Include="Feldolgoz.cs" />
     <Compile Include="Elektronika.cs" />
     <Compile Include="Fekrendszer.cs" />

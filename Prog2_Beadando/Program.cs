@@ -26,18 +26,19 @@ namespace Prog2_Beadando
                 Feldolgoz feldolgoz1 = new Feldolgoz("Proba.txt");
                 feldolgoz1.MindentFeldolgoz();
                 feldolgoz1.Teszt();
+                feldolgoz1.Elromlas();
 
-                Feldolgoz feldolgoz2 = new Feldolgoz("Proba2.txt");
-                feldolgoz2.MindentFeldolgoz();
-                feldolgoz2.Teszt();
+                //Feldolgoz feldolgoz2 = new Feldolgoz("Proba2.txt");
+                //feldolgoz2.MindentFeldolgoz();
+                //feldolgoz2.Teszt();
 
-                Feldolgoz feldolgoz3 = new Feldolgoz("Proba3.txt");
-                feldolgoz3.MindentFeldolgoz();
-                feldolgoz3.Teszt();
+                //Feldolgoz feldolgoz3 = new Feldolgoz("Proba3.txt");
+                //feldolgoz3.MindentFeldolgoz();
+                //feldolgoz3.Teszt();
 
-                Feldolgoz feldolgoz4 = new Feldolgoz("Proba4.txt");
-                feldolgoz4.MindentFeldolgoz();
-                feldolgoz4.Teszt();
+                //Feldolgoz feldolgoz4 = new Feldolgoz("Proba4.txt");
+                //feldolgoz4.MindentFeldolgoz();
+                //feldolgoz4.Teszt();
             }
             catch (FileNotFoundException)
             {

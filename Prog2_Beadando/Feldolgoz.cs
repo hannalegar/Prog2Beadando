@@ -233,7 +233,7 @@ namespace Prog2_Beadando
             string nevKikotes = "";
             foreach (string item in txtSorai)
             {
-                if (item.StartsWith("név kikötés"))
+                if (item.StartsWith("kikötés"))
                 {
                     nevKikotes = item.Split(':')[1];
                 }
@@ -526,8 +526,6 @@ namespace Prog2_Beadando
         /// Ha nincs megadva, csak hogy egy alkatrész benne legyen, akkor vissza adja az első olyan autot ami azt az alkatreszt tartalmazza
         /// Ha a legkönyebb autot keressük, akkor azt adja viisza, ugyanígy az árral
         /// </summary>
-        /// <param name="kikotes"></param>
-        /// <returns></returns>
         public Auto Optimalizacio(string kikotes)
         {
             if (kikotes == "súly")
@@ -554,6 +552,20 @@ namespace Prog2_Beadando
             else
             {
                 throw new OptimalizacioException();
+            }
+        }
+
+        public void Elromlas()
+        {
+            
+         
+            foreach (var item in alkatreszek)
+            {
+                item.Hasznal();
+                if (!item.MukodoKepes)
+                {
+                    
+                }
             }
         }
     }
